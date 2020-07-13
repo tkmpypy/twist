@@ -1,7 +1,9 @@
 use egg_mode;
+use egg_mode::tweet::Tweet;
 
 use crate::constants::Constants;
 use crate::config::Config;
+use crate::error::TwistError;
 
 pub struct Twist {
     config: Config
@@ -18,8 +20,16 @@ impl Twist {
         panic!("can't authenticate")
     }
 
-    pub fn tweet(self, text: &str) {
-        println!("{}", String::from(text));
+    pub async fn tweet(&self, text: String) -> Result<Tweet, crate::error::TwistError> {
+        let tweet = egg_mode::tweet::DraftTweet::new(text);
+        let result = tweet.send(&self.config.token).await;
+        match result {
+            Ok(res) => {
+                println!("created_at {} id: {}", res.response.created_at, res.response.id);
+                Ok(res.response)
+            },
+            Err(_) => Err(TwistError::TweetFailure)
+        }
     }
 
     async fn auth() -> Option<Config> {

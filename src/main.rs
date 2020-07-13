@@ -20,7 +20,7 @@ async fn main() {
     match matches.value_of("TWEET") {
         Some(res) => {
             let twist = Twist::new().await;
-            twist.tweet(res);
+            let _ = twist.tweet(res.to_string()).await;
         },
         None => panic!("required tweet."),
     }

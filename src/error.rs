@@ -1,3 +1,4 @@
 pub enum TwistError {
-    EmptyConfig
+    EmptyConfig,
+    TweetFailure
 }
