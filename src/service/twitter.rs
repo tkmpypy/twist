@@ -10,16 +10,19 @@ pub struct Twist {
 impl Twist {
     pub async fn new() -> Self {
         let config = Twist::auth().await;
-        Twist {
-            config
+        if let Some(config) = config {
+            return Twist {
+                config
+            }
         }
+        panic!("can't authenticate")
     }
 
     pub fn tweet(self, text: &str) {
         println!("{}", String::from(text));
     }
 
-    async fn auth() -> Config{
+    async fn auth() -> Option<Config> {
         let key = Constants::CONSUMER_KEY;
         let secret = Constants::CONSUMER_SECRET;
         let con_token = egg_mode::KeyPair::new(key, secret);
