@@ -20,16 +20,10 @@ pub struct Config {
 impl Config {
     
     pub async fn load(conn_token: &egg_mode::KeyPair) -> Option<Config> {
-        println!("load config");
         Config::load_inner(conn_token).await
     }
 
     async fn load_inner(conn_token: &egg_mode::KeyPair) -> Option<Config> {
-        println!(
-            "{}, {}",
-            conn_token.key.to_string(),
-            conn_token.secret.to_string()
-        );
         if let Ok(conf_file) = Config::get_config_file().await {
             if let Ok(_) = fs::File::open(&conf_file) {
                 let config_result = Config::get_config(conn_token, &conf_file);
@@ -126,7 +120,6 @@ impl Config {
     ) -> Result<Config, TwistError> {
         let root = &yaml.get(0).ok_or(TwistError::EmptyConfig)?;
         let root = &root["twist"];
-        println!("{:?}", root);
         let user_id = root["userId"].as_i64().unwrap();
         let user_id = u64::try_from(user_id);
         let user_name = root["username"].as_str().unwrap();
@@ -156,8 +149,8 @@ impl Config {
                 println!("create setting file to {}", &file);
                 let f = fs::File::create(f_path);
                 match f {
-                    Ok(f) => return Ok(f_path.to_owned()),
-                    Err(e) => return Err("can't create setting file"),
+                    Ok(_) => return Ok(f_path.to_owned()),
+                    Err(_) => return Err("can't create setting file"),
                 }
             }
             Ok(f_path.to_owned())
