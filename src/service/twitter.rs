@@ -1,7 +1,7 @@
 use egg_mode;
 use egg_mode::tweet::Tweet;
 
-use crate::constants::Constants;
+use crate::constants::{CONSUMER_KEY, CONSUMER_SECRET};
 use crate::config::Config;
 use crate::error::TwistError;
 
@@ -33,17 +33,13 @@ impl Twist {
     }
 
     async fn auth() -> Option<Config> {
-        let key = Constants::CONSUMER_KEY;
-        let secret = Constants::CONSUMER_SECRET;
-        let con_token = egg_mode::KeyPair::new(key, secret);
+        let con_token = egg_mode::KeyPair::new(CONSUMER_KEY, CONSUMER_SECRET);
 
         Config::load(&con_token).await
     }
 
     pub async fn get_request_token() -> egg_mode::auth::KeyPair {
-        let key = Constants::CONSUMER_KEY;
-        let secret = Constants::CONSUMER_SECRET;
-        let con_token = egg_mode::KeyPair::new(key, secret);
+        let con_token = egg_mode::KeyPair::new(CONSUMER_KEY, CONSUMER_SECRET);
 
         egg_mode::auth::request_token(&con_token, "oob").await.unwrap()
 

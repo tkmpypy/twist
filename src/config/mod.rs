@@ -6,9 +6,9 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use yaml_rust::{Yaml, YamlEmitter, YamlLoader};
 
-use crate::constants::Constants;
 use crate::error::TwistError;
 use crate::service::twitter::Twist;
+use crate::constants::CONFIG_FILE_NAME;
 
 #[derive(Debug)]
 pub struct Config {
@@ -18,6 +18,7 @@ pub struct Config {
 }
 
 impl Config {
+    
     pub async fn load(conn_token: &egg_mode::KeyPair) -> Option<Config> {
         println!("load config");
         Config::load_inner(conn_token).await
@@ -149,7 +150,7 @@ impl Config {
         let home_dir = dirs::home_dir();
         if let Some(home_dir) = home_dir {
             let dir_str = home_dir.to_str().unwrap();
-            let file = format!("{}/{}", dir_str, Constants::CONFIG_FILE_NAME);
+            let file = format!("{}/{}", dir_str, CONFIG_FILE_NAME);
             let f_path = Path::new(file.as_str());
             if !f_path.exists() {
                 println!("create setting file to {}", &file);
